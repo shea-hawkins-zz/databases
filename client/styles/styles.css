@@ -1,0 +1,101 @@
+body, html {
+    background: #eee;
+    text-align: center;
+    padding: 0 25px;
+    font-family: arial, sans-serif;
+    width:100%;
+    height:100%;
+}
+
+#messageList {
+    height: 500px;
+    margin: auto;
+    overflow: scroll;
+    width: 40%;
+}
+
+#messageInput {
+    padding: .5em 0em .5em 0em;
+    width: 40%;
+    margin: auto;
+}
+
+form {
+    padding: 20px;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+
+form input[type=text] {
+    margin-right: 10px;
+    width: 30%;
+    font-size: 12px;
+    padding: 5px;
+}
+
+
+
+.dropdownInput {
+  width: 15em;
+  display: inline-block;
+}
+
+.chat {
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #eee;
+}
+
+.chat .username {
+    font-weight: 800;
+}
+
+.chat:hover {
+    background-color: #ddd;
+}
+
+
+.dropdown {
+  width:12em;
+  margin:auto;
+}
+
+.dropdown-menu:hover {
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background-color: limegreen;
+}
+
+.friend {
+  font-weight:bold;
+}
+
+.message {
+  background-color: gray;
+  border-radius: 15px;  
+  margin-top: .25em;
+  margin-bottom: .25em;
+  padding: .5em;  
+}
+
+.spinner {
+    float: right;
+    height: 46px;
+    margin-bottom: 5px;
+}
+
+.spinner img {
+    padding: 10px;
+}
+
+.tabsBar {
+  margin: auto;
+  width: 40%; 
+
+}
+
+
+
+
