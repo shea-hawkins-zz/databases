@@ -10,9 +10,11 @@ describe('Persistent Node Chat Server', function() {
 
   beforeEach(function(done) {
     dbConnection = mysql.createConnection({
-      user: 'root',
-      password: 'root',
-      database: 'chat'
+  host     : '127.0.0.1',
+  user     : 'root',
+  password : 'root',
+  database : 'chat',
+  multipleStatements: true
     });
     dbConnection.connect();
 
@@ -29,39 +31,51 @@ describe('Persistent Node Chat Server', function() {
 
   it('Should insert posted messages to the DB', function(done) {
     // Post the user to the chat server.
-    request({
-      method: 'POST',
-      uri: 'http://127.0.0.1:3000/classes/users',
-      json: { username: 'Valjean' }
-    }, function () {
-      // Post a message to the node chat server:
+    console.log('test');
+    new Promise(function(resolve, reject) {
+      console.log('1');
       request({
         method: 'POST',
-        uri: 'http://127.0.0.1:3000/classes/messages',
-        json: {
-          username: 'Valjean',
-          message: 'In mercy\'s name, three days is all I need.',
-          roomname: 'Hello'
-        }
-      }, function () {
-        // Now if we look in the database, we should find the
-        // posted message there.
-
-        // TODO: You might have to change this test to get all the data from
-        // your message table, since this is schema-dependent.
-        var queryString = 'SELECT * FROM messages';
-        var queryArgs = [];
-
-        dbConnection.query(queryString, queryArgs, function(err, results) {
-          // Should have one result:
-          expect(results.length).to.equal(1);
-
-          // TODO: If you don't have a column named text, change this test.
-          expect(results[0].message).to.equal('In mercy\'s name, three days is all I need.');
-
-          done();
+        uri: 'http://127.0.0.1:3000/classes/users',
+        json: { username: 'Valjean' }
+      }, function(err, res) {
+        err ? reject() : resolve();
+      });
+    }).then(function() {
+      console.log('2');
+      return new Promise(function(resolve, reject) {
+        request({
+          method: 'POST',
+          uri: 'http://127.0.0.1:3000/classes/messages',
+          json: {
+            username: 'Valjean',
+            text: 'In mercy\'s name, three days is all I need.',
+            roomname: 'Hello'
+          }
+        }, function(err, res) {
+          console.log('err');
+          err ? reject() : resolve();
         });
       });
+    }).then(function() {
+      console.log('3');
+      var queryString = 'SELECT message text FROM messages';
+      console.log(queryString);
+      var queryArgs = [];
+      return new Promise(function(resolve, reject) {
+        dbConnection.query(queryString, queryArgs, function(err, results) { 
+          err ? reject(err) : resolve(results);
+        });
+      }); 
+    }).then(function(results) {
+      console.log('4');
+      // Should have one result:
+      expect(results.length).to.equal(1);
+      // TODO: If you don't have a column named text, change this test.
+      expect(results[0].text).to.equal('In mercy\'s name, three days is all I need.');
+      done();
+    }).catch(function(err) {
+      console.log('err', err);
     });
   });
 
@@ -72,12 +86,15 @@ describe('Persistent Node Chat Server', function() {
     // here depend on the schema you design, so I'll leave
     // them up to you. */
     var queryString = `
-      INSERT INTO users
-      SELECT 1, 'me';
-      INSERT INTO rooms
-      SELECT 1, 'main';
-      INSERT INTO messages
-      SELECT 1, 1, 1, 'Men like you can never change!';
+          INSERT IGNORE INTO rooms (name)
+          SELECT 'main';
+          INSERT IGNORE INTO users (name)
+          SELECT 'me';
+          INSERT IGNORE INTO messages (message, user_id, room_id)
+          SELECT 'Men like you can never change!', users.id, rooms.id
+          FROM users, rooms
+          WHERE users.name like 'me'
+            AND rooms.name like 'main';
     `;
     var queryArgs = [];
 
@@ -87,8 +104,8 @@ describe('Persistent Node Chat Server', function() {
       // Now query the Node chat server and see if it returns
       // the message we just inserted:
       request('http://127.0.0.1:3000/classes/messages', function(error, response, body) {
-        var messageLog = JSON.parse(body);
-        expect(messageLog[0].message).to.equal('Men like you can never change!');
+        var messageLog = JSON.parse(body).results;
+        expect(messageLog[0].text).to.equal('Men like you can never change!');
         expect(messageLog[0].roomname).to.equal('main');
         done();
       });
