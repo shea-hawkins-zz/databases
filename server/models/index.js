@@ -7,14 +7,14 @@ module.exports = {
         var queryStr = `
           SELECT message, users.name username, rooms.name roomname
           FROM messages 
-            INNER JOIN users on messages.user_id = users.id
+            INNER JOIN users on messages.user_id = users.id 
             INNER JOIN rooms on messages.room_id = rooms.id
-        `;
+        `;                                                                                          //could we have used id instead of users/rooms.id?
         db.query(queryStr, function(err, results) {
           !err ? resolve(results) : reject(err);
         });
       });
-    }, // a function which produces all the messages
+    }, // a function which produces all the mess u.rages
     post: function (msgObj) { // a function which can be used to insert a message into the database
       return new Promise(function(resolve, reject) {
         var queryStr = `
@@ -42,8 +42,8 @@ module.exports = {
           SELECT users.name username 
           FROM users;
         `;
-        db.query(queryStr, function(err) {
-          !err ? resolve() : reject(err);
+        db.query(queryStr, function(err, results) {
+          !err ? resolve(results) : reject(err);
         });
       });
     },

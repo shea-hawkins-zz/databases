@@ -1,7 +1,6 @@
 var App = (function () {
     function App(id) {
-        var messageService = new MessageService('https://api.parse.com/1/classes/messages');
-        '';
+        var messageService = new MessageService('http://127.0.0.1:3000/classes/messages');
         $("#" + id).append($('<div id="menuBar"></div>'));
         $("#" + id).append($('<div id="messageList"></div>'));
         $("#" + id).append($('<div id="messageInput"></div>'));
@@ -20,7 +19,7 @@ var App = (function () {
         // Messagebar dropdown that we are listening to the change inside the app. 
         // When changes, call messageList.displayMessages(filter);
         // MessageBar needs to bind to the messageService and retrieve the distinct list of rooms.
-    }
+    };
     return App;
 }());
 var getUsername = function () {

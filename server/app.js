@@ -1,5 +1,7 @@
 var express = require('express');
 var db = require('./db');
+var path = require('path');
+var cors = require('cors');
 
 // Middleware
 var morgan = require('morgan');
@@ -18,8 +20,14 @@ app.set('port', 3000);
 app.use(morgan('dev'));
 app.use(parser.json());
 
+// Enable cors
+app.use(cors());
+
 // Set up our routes
 app.use('/classes', router);
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, '/../client/index.html'));
+});
 
 // Serve the client files
 app.use(express.static(__dirname + '/../client'));

@@ -1,4 +1,4 @@
-drop database chat;
+drop database IF EXISTS chat;
 CREATE DATABASE chat;
 USE chat;
 /*  Execute this file from the command line by typing:

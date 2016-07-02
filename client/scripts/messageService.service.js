@@ -1,7 +1,7 @@
 var MessageService = (function () {
     function MessageService(url) {
         this.url = url;
-        this.getUrl = url + '?order=-createdAt';
+        this.getUrl = url;
         this.ajaxOptions = {
             url: url,
             contentType: 'application/jsonp',
@@ -52,6 +52,7 @@ var MessageService = (function () {
             contentType: 'application/jsonp',
             jsonp: true,
             success: function (data) {
+                console.log(data);
                 _this._parseMessages(data.results);
             }
         });
@@ -65,6 +66,7 @@ var MessageService = (function () {
             dataType: 'json',
             data: JSON.stringify(message),
             success: function () {
+
                 console.log('Message delivered');
             }
         });

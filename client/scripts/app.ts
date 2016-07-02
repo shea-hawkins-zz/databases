@@ -1,6 +1,6 @@
 class App {
   constructor(id) {
-    let messageService = new MessageService('https://api.parse.com/1/classes/messages'); ''
+    let messageService = new MessageService('http://127.0.0.1:3000/'); ''
     $(`#${id}`).append($('<div id="menuBar"></div>'));
     $(`#${id}`).append($('<div id="messageList"></div>'));
     $(`#${id}`).append($('<div id="messageInput"></div>'));
