@@ -6,11 +6,11 @@ module.exports = {
     post: function (msgObj) { // a function which can be used to insert a message into the database
       console.log('msg', msgObj);
       var queryStr = `
-        INSERT INTO rooms (name)
+        INSERT IGNORE INTO rooms (name)
         SELECT '${msgObj.roomname}';
-        INSERT INTO users (name)
+        INSERT IGNORE INTO users (name)
         SELECT '${msgObj.username}';
-        INSERT INTO messages (message, user_id, room_id)
+        INSERT IGNORE INTO messages (message, user_id, room_id)
         SELECT '${msgObj.message}', users.id, rooms.id
         FROM users, rooms
         WHERE users.name like '${msgObj.username}'
